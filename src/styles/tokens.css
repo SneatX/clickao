@@ -1,0 +1,50 @@
+/*
+ * Paleta y tokens de Clickao.
+ *
+ * Reparto de saturación, fijado en la fase de dirección de arte y no negociable
+ * después: los verdes del dosel ocupan la mayor superficie y son los más
+ * desaturados, para no competir. La saturación máxima está reservada al rango
+ * cálido de la madurez de la mazorca, que es el objetivo de clic. Y todo lo
+ * frío significa problema: gris azulado es enfermedad, nunca decoración.
+ */
+:root {
+  /* Dosel y sombrío */
+  --verde-oscuro: #2f5d3a;
+  --verde: #4a7c4e;
+  --verde-claro: #6e9c5a;
+
+  /* Madera, grano y estructuras */
+  --madera: #8b5e34;
+  --madera-clara: #a9743f;
+  --arena: #d9b382;
+
+  /* Fondo */
+  --cielo: #efe3c8;
+  --cielo-alto: #f7efdd;
+
+  /* Frío: reservado en exclusiva para lo negativo */
+  --frio: #5b6e7a;
+  --frio-oscuro: #3e5561;
+
+  /* Madurez de la mazorca */
+  --maz-verde: #7ba05b;
+  --maz-pinton: #c9a227;
+  --maz-optimo: #e07a1f;
+  --maz-roja: #7b1e2b;
+  --maz-sobremadura: #6e4b2a;
+
+  /* Interfaz */
+  --panel: #1b3a2f;
+  --panel-claro: #24503f;
+  --panel-borde: #35664f;
+  --dorado: #f2c14e;
+  --texto: #f5efe0;
+  --texto-tenue: #c3bda9;
+  --texto-oscuro: #2a2418;
+
+  --radio: 10px;
+  --radio-s: 6px;
+  --sombra: 0 2px 0 rgba(0, 0, 0, 0.25);
+  --fuente: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+}
