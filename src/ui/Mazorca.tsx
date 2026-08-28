@@ -46,7 +46,6 @@ interface Props {
   ventanaInicio: number
   ventanaAncho: number
   marcada: boolean
-  cortada: boolean
   onCortar: (m: TMazorca, fase: FaseMadurez, x: number, y: number) => void
 }
 
@@ -57,7 +56,6 @@ function MazorcaBase({
   ventanaInicio,
   ventanaAncho,
   marcada,
-  cortada,
   onCortar,
 }: Props) {
   const c = (mazorca.roja ? PALETA_ROJA : PALETA)[fase]
@@ -74,7 +72,7 @@ function MazorcaBase({
 
   return (
     <g
-      className={`mazorca ${fase} ${cortada ? 'cortada' : ''}`}
+      className={`mazorca ${fase}`}
       transform={`translate(${mazorca.x} ${mazorca.y})`}
       role="button"
       tabIndex={0}

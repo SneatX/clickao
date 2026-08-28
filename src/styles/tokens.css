@@ -1,49 +1,65 @@
 /*
  * Paleta y tokens de Clickao.
  *
- * Reparto de saturación, fijado en la fase de dirección de arte y no negociable
- * después: los verdes del dosel ocupan la mayor superficie y son los más
- * desaturados, para no competir. La saturación máxima está reservada al rango
- * cálido de la madurez de la mazorca, que es el objetivo de clic. Y todo lo
- * frío significa problema: gris azulado es enfermedad, nunca decoración.
+ * Reparto de saturación, fijado en la fase de dirección de arte:
+ *  - Los verdes del dosel ocupan la mayor superficie y son los más apagados.
+ *  - La saturación máxima está reservada al rango cálido de la madurez de la
+ *    mazorca, que es el objetivo de clic.
+ *  - Todo lo frío significa problema: el gris azulado es enfermedad y grado
+ *    pasilla, nunca decoración.
+ *
+ * Cada línea de mejora tiene además su propio acento (oro, verde vivo y
+ * terracota), para que las tres se distingan de un vistazo sin leer.
  */
 :root {
   /* Dosel y sombrío */
-  --verde-oscuro: #2f5d3a;
-  --verde: #4a7c4e;
-  --verde-claro: #6e9c5a;
+  --verde-oscuro: #27502f;
+  --verde: #3f7d45;
+  --verde-claro: #62a24c;
+  --verde-vivo: #7fbd52;
 
   /* Madera, grano y estructuras */
-  --madera: #8b5e34;
-  --madera-clara: #a9743f;
-  --arena: #d9b382;
+  --madera: #8b5424;
+  --madera-clara: #b57534;
+  --arena: #e2bb84;
 
-  /* Fondo */
-  --cielo: #efe3c8;
-  --cielo-alto: #f7efdd;
+  /* Cielo cálido: la escena entera se apoya en este contraste */
+  --cielo-alto: #fff6e0;
+  --cielo: #fbe2b6;
+  --cielo-bajo: #f4cf96;
 
   /* Frío: reservado en exclusiva para lo negativo */
   --frio: #5b6e7a;
-  --frio-oscuro: #3e5561;
+  --frio-oscuro: #37505c;
 
   /* Madurez de la mazorca */
-  --maz-verde: #7ba05b;
-  --maz-pinton: #c9a227;
-  --maz-optimo: #e07a1f;
-  --maz-roja: #7b1e2b;
+  --maz-verde: #84ab5c;
+  --maz-pinton: #e0b520;
+  --maz-optimo: #f4801a;
+  --maz-roja: #c0392b;
   --maz-sobremadura: #6e4b2a;
 
   /* Interfaz */
-  --panel: #1b3a2f;
-  --panel-claro: #24503f;
-  --panel-borde: #35664f;
-  --dorado: #f2c14e;
-  --texto: #f5efe0;
-  --texto-tenue: #c3bda9;
-  --texto-oscuro: #2a2418;
+  --panel: #10302a;
+  --panel-claro: #1b4a3d;
+  --panel-borde: #2f6b56;
+  --icono-fondo: #0a2620;
+  --dorado: #ffc94a;
+  --dorado-oscuro: #cf9a25;
+  --terracota: #e0653a;
+  --terracota-oscuro: #a8421f;
+  --vino: #a32f45;
+  --texto: #fbf5e6;
+  --texto-tenue: #b8c4b4;
+  --texto-oscuro: #24211a;
 
-  --radio: 10px;
-  --radio-s: 6px;
+  /* Acento por línea de mejora */
+  --linea-herramientas: #ffc94a;
+  --linea-cultivo: #7fbd52;
+  --linea-beneficio: #e0653a;
+
+  --radio: 12px;
+  --radio-s: 7px;
   --sombra: 0 2px 0 rgba(0, 0, 0, 0.25);
   --fuente: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
   --mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;

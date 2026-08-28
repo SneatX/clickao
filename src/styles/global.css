@@ -38,7 +38,7 @@ button:focus-visible,
 .app {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
-  grid-template-rows: auto minmax(0, 1fr) 248px;
+  grid-template-rows: auto minmax(0, 1fr) 262px;
   grid-template-areas:
     'barra barra'
     'escena mejoras'
@@ -145,25 +145,30 @@ button:focus-visible,
 
 .boton.primario {
   background: var(--dorado);
-  border-color: #c99b2b;
+  border-color: var(--dorado-oscuro);
   color: var(--texto-oscuro);
+  box-shadow: 0 2px 0 var(--dorado-oscuro);
 }
 
 .boton.primario:hover:not(:disabled) {
-  background: #ffd267;
+  background: #ffd979;
 }
 
 .boton.peligro {
-  background: transparent;
-  border-color: var(--frio);
-  color: var(--texto-tenue);
+  background: var(--terracota);
+  border-color: var(--terracota-oscuro);
+  color: #fff5ec;
+}
+
+.boton.peligro:hover:not(:disabled) {
+  background: #f0764a;
 }
 
 /* ------------------------------ Escena ---------------------------- */
 .escena {
   grid-area: escena;
   position: relative;
-  background: linear-gradient(180deg, var(--cielo-alto) 0%, var(--cielo) 55%, #e2d3b2 100%);
+  background: linear-gradient(180deg, var(--cielo-alto) 0%, var(--cielo) 48%, var(--cielo-bajo) 100%);
   overflow: hidden;
   user-select: none;
 }
@@ -198,9 +203,31 @@ button:focus-visible,
 }
 
 .mazorca .cuerpo {
-  transition: transform 0.12s ease;
+  transition: transform 0.1s ease;
   transform-box: fill-box;
   transform-origin: center;
+}
+
+/* Vapor de la masa en fermentación: la caja está trabajando. */
+.vapor {
+  animation: vapor 2.6s ease-in-out infinite;
+}
+
+@keyframes vapor {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(2px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-3px);
+  }
+}
+
+body.bajo-consumo .vapor {
+  animation: none;
+  opacity: 0.6;
 }
 
 .mazorca:active .cuerpo {
@@ -223,21 +250,95 @@ button:focus-visible,
   }
 }
 
-.mazorca.cortada .cuerpo {
-  animation: corte 0.3s ease-out forwards;
+/* Corte de la mazorca: destello, las dos mitades girando y la onda del punto. */
+.corte {
+  pointer-events: none;
 }
 
-@keyframes corte {
+.corte g,
+.corte path {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.corte-mitad-izq {
+  animation: mitad-izq 0.42s cubic-bezier(0.22, 0.7, 0.3, 1) forwards;
+}
+
+.corte-mitad-der {
+  animation: mitad-der 0.42s cubic-bezier(0.22, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes mitad-izq {
   0% {
-    transform: scale(0.9);
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
   }
-  35% {
-    transform: scale(1.15) rotate(-7deg);
+  22% {
+    transform: translate(-3px, -3px) rotate(-6deg);
   }
   100% {
-    transform: scale(0.15) rotate(16deg);
+    transform: translate(-20px, 16px) rotate(-42deg);
     opacity: 0;
   }
+}
+
+@keyframes mitad-der {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  22% {
+    transform: translate(3px, -3px) rotate(6deg);
+  }
+  100% {
+    transform: translate(20px, 16px) rotate(42deg);
+    opacity: 0;
+  }
+}
+
+.corte-destello {
+  animation: destello 0.26s ease-out forwards;
+}
+
+@keyframes destello {
+  0% {
+    opacity: 0;
+    transform: scale(0.2, 1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.15, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35, 1);
+  }
+}
+
+.corte-onda {
+  animation: onda 0.42s ease-out forwards;
+}
+
+@keyframes onda {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.35);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+/* El apretón antes de soltar: la mazorca cede un poco bajo la herramienta. */
+.mazorca:active .cuerpo {
+  transform: scale(0.84);
+}
+
+body.bajo-consumo .corte-onda,
+body.bajo-consumo .corte-destello {
+  animation-duration: 0.12s;
 }
 
 .marca-punto {
@@ -474,10 +575,82 @@ button:focus-visible,
 
 .bodega {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   padding: 0 16px 12px;
+  align-items: stretch;
+}
+
+.bodega-existencias {
+  display: flex;
+  gap: 8px;
+  flex: 1;
   flex-wrap: wrap;
   align-items: center;
+  min-width: 0;
+}
+
+.bodega-vacia {
+  font-size: 12px;
+  color: var(--texto-tenue);
+  line-height: 1.4;
+  max-width: 340px;
+}
+
+/* Botones grandes de venta: dos lineas, cifra arriba y detalle abajo. */
+.boton.grande {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 8px 18px;
+  min-width: 168px;
+  line-height: 1.25;
+}
+
+.boton.grande em {
+  font-style: normal;
+  font-size: 11px;
+  opacity: 0.75;
+  font-weight: 600;
+}
+
+.boton.grande span {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/*
+ * La venta en baba es la salida rapida: tiene que verse, porque esconderla
+ * seria decidir por el jugador. Se marca en terracota, con el porcentaje que
+ * paga el intermediario a la vista, y nunca se bloquea.
+ */
+.salida-rapida {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 2px dashed var(--terracota);
+  border-radius: var(--radio);
+  background: rgba(224, 101, 58, 0.09);
+}
+
+.salida-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 260px;
+}
+
+.salida-texto strong {
+  font-size: 13px;
+  color: var(--terracota);
+}
+
+.salida-texto span {
+  font-size: 11px;
+  color: var(--texto-tenue);
+  line-height: 1.35;
 }
 
 .bodega-item {
@@ -530,8 +703,22 @@ button:focus-visible,
 
 .pestana[aria-selected='true'] {
   color: var(--texto);
-  border-bottom-color: var(--dorado);
+  border-bottom-color: var(--acento-linea, var(--dorado));
   background: var(--panel-claro);
+}
+
+.pestana[data-linea='herramientas'] {
+  --acento-linea: var(--linea-herramientas);
+}
+.pestana[data-linea='cultivo'] {
+  --acento-linea: var(--linea-cultivo);
+}
+.pestana[data-linea='beneficio'] {
+  --acento-linea: var(--linea-beneficio);
+}
+
+.pestana[aria-selected='true'] .conteo.hay {
+  background: var(--acento-linea, var(--dorado));
 }
 
 .pestana .conteo.hay {
@@ -566,13 +753,41 @@ button:focus-visible,
 
 .mejora-comprar {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4px 10px;
+  grid-template-columns: 42px 1fr auto;
+  grid-template-areas:
+    'icono nombre costo'
+    'icono desc desc';
+  align-items: start;
+  gap: 3px 10px;
   width: 100%;
   text-align: left;
   background: none;
   border: 0;
   padding: 0;
+}
+
+.mejora-comprar .icono {
+  grid-area: icono;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--icono-fondo);
+  border: 1px solid var(--panel-borde);
+}
+
+.mejora-comprar .nombre {
+  grid-area: nombre;
+}
+
+.mejora-comprar .costo {
+  grid-area: costo;
+}
+
+.mejora-comprar .desc {
+  grid-area: desc;
 }
 
 .mejora-comprar:disabled {
@@ -604,8 +819,30 @@ button:focus-visible,
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   font-size: 13px;
-  color: var(--dorado);
+  color: var(--acento-linea, var(--dorado));
   white-space: nowrap;
+}
+
+.lista-mejoras[data-linea='herramientas'] {
+  --acento-linea: var(--linea-herramientas);
+}
+.lista-mejoras[data-linea='cultivo'] {
+  --acento-linea: var(--linea-cultivo);
+}
+.lista-mejoras[data-linea='beneficio'] {
+  --acento-linea: var(--linea-beneficio);
+}
+
+.mejora {
+  border-left: 3px solid var(--acento-linea, var(--panel-borde));
+}
+
+.mejora:has(.mejora-comprar:not(:disabled)) {
+  background: #21594a;
+}
+
+.mejora:has(.mejora-comprar:not(:disabled)):hover {
+  background: #2a6a58;
 }
 
 .mejora-comprar:disabled .costo {
@@ -613,7 +850,6 @@ button:focus-visible,
 }
 
 .mejora .desc {
-  grid-column: 1 / -1;
   font-size: 11.5px;
   line-height: 1.45;
   color: var(--texto-tenue);
@@ -803,7 +1039,7 @@ button:focus-visible,
 .avisos {
   position: fixed;
   left: 50%;
-  bottom: 268px;
+  bottom: 282px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;

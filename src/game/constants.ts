@@ -73,10 +73,10 @@ export interface Grado {
  * minimo para dar la prueba por exitosa.
  */
 export const GRADOS: Grado[] = [
-  { id: 'pasilla', nombre: 'Pasilla', desde: 0, multiplicador: 0.6, color: '#5B6E7A' },
-  { id: 'corriente', nombre: 'Corriente', desde: 0.4, multiplicador: 1.0, color: '#A9743F' },
-  { id: 'premium', nombre: 'Premium', desde: 0.6, multiplicador: 1.6, color: '#C9A227' },
-  { id: 'fino', nombre: 'Fino de aroma', desde: 0.7, multiplicador: 2.5, color: '#E07A1F' },
+  { id: 'pasilla', nombre: 'Pasilla', desde: 0, multiplicador: 0.6, color: '#7d93a0' },
+  { id: 'corriente', nombre: 'Corriente', desde: 0.4, multiplicador: 1.0, color: '#d09a5c' },
+  { id: 'premium', nombre: 'Premium', desde: 0.6, multiplicador: 1.6, color: '#f0c02f' },
+  { id: 'fino', nombre: 'Fino de aroma', desde: 0.7, multiplicador: 2.5, color: '#ff8a2b' },
 ]
 
 /** Precio mayorista de referencia por kilo de grano seco corriente. */
