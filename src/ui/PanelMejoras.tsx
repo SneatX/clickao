@@ -10,6 +10,7 @@ import type { Categoria } from '../game/types'
 import { useDispatch, useEstado } from '../context/GameContext'
 import { mejorasVisibles } from '../game/selectors'
 import { num, pesos } from '../game/format'
+import { IconoMejora } from './IconosMejora'
 
 const LINEAS: { id: Categoria; nombre: string; explicacion: string }[] = [
   {
@@ -62,6 +63,7 @@ export function PanelMejoras({ onFicha, linea, onLinea }: Props) {
               key={l.id}
               role="tab"
               className="pestana"
+              data-linea={l.id}
               aria-selected={linea === l.id}
               onClick={() => onLinea(l.id)}
               title={`${l.nombre} (tecla ${i + 1})`}
@@ -77,7 +79,7 @@ export function PanelMejoras({ onFicha, linea, onLinea }: Props) {
 
       <p className="explicacion-linea">{activa.explicacion}</p>
 
-      <div className="lista-mejoras" role="tabpanel">
+      <div className="lista-mejoras" data-linea={linea} role="tabpanel">
         {porLinea[linea].length === 0 && (
           <p style={{ padding: 16, color: 'var(--texto-tenue)', fontSize: 13, lineHeight: 1.5 }}>
             Todavía no hay nada de esta línea a tu alcance. Sigue cosechando y vendiendo: las mejoras aparecen a
@@ -93,6 +95,9 @@ export function PanelMejoras({ onFicha, linea, onLinea }: Props) {
               onClick={() => dispatch({ tipo: 'COMPRAR', mejoraId: mejora.id })}
               title={alcanzable ? `Comprar por ${pesos(costo)}` : `Te faltan ${pesos(costo - s.dinero)}`}
             >
+              <span className="icono">
+                <IconoMejora id={mejora.id} categoria={mejora.categoria} />
+              </span>
               <span className="nombre">{mejora.nombre}</span>
               <span className="costo">{pesos(costo)}</span>
               <span className="desc">{mejora.descripcion}</span>

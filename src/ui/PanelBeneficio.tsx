@@ -10,7 +10,7 @@ import { gradoDe, precioBaba, precioKilo } from '../game/selectors'
 import { ventanaAbierta } from '../game/reducer'
 import * as K from '../game/constants'
 import { kg, num, pesos, porcentaje, segundos } from '../game/format'
-import { IconoEtapa, IconoGrano } from './Iconos'
+import { IconoEtapa } from './Iconos'
 
 export function PanelBeneficio() {
   const s = useEstado()
@@ -18,6 +18,8 @@ export function PanelBeneficio() {
   const dispatch = useDispatch()
   const verCalidadExacta = (s.mejoras.prueba_corte ?? 0) > 0
   const libres = a.lotesMax - s.lotes.length
+  const enBodega = K.GRADOS.reduce((t, g) => t + (s.bodega[g.id] ?? 0), 0)
+  const valorBodega = K.GRADOS.reduce((t, g) => t + (s.bodega[g.id] ?? 0) * precioKilo(s, g.id, a), 0)
 
   return (
     <section className="beneficio" aria-label="Área de beneficio">
@@ -116,42 +118,57 @@ export function PanelBeneficio() {
       </div>
 
       <div className="bodega">
-        {K.GRADOS.map((g) => {
-          const cantidad = s.bodega[g.id] ?? 0
-          if (cantidad <= 0) return null
-          return (
-            <div key={g.id} className="bodega-item">
-              <span className="pastilla" style={{ color: g.color }}>
-                {g.nombre}
-              </span>
-              <strong>{kg(cantidad)}</strong>
-              <span style={{ color: 'var(--texto-tenue)' }}>a {pesos(precioKilo(s, g.id, a))}/kg</span>
-              <button className="boton" onClick={() => dispatch({ tipo: 'VENDER', grado: g.id })}>
-                Vender {pesos(cantidad * precioKilo(s, g.id, a))}
-              </button>
-            </div>
-          )
-        })}
+        <div className="bodega-existencias">
+          {K.GRADOS.map((g) => {
+            const cantidad = s.bodega[g.id] ?? 0
+            if (cantidad <= 0) return null
+            return (
+              <div key={g.id} className="bodega-item">
+                <span className="pastilla" style={{ color: g.color }}>
+                  {g.nombre}
+                </span>
+                <strong>{kg(cantidad)}</strong>
+                <span style={{ color: 'var(--texto-tenue)' }}>a {pesos(precioKilo(s, g.id, a))}/kg</span>
+                <button className="boton" onClick={() => dispatch({ tipo: 'VENDER', grado: g.id })}>
+                  Vender {pesos(cantidad * precioKilo(s, g.id, a))}
+                </button>
+              </div>
+            )
+          })}
+          {enBodega <= 0 && (
+            <span className="bodega-vacia">
+              La bodega está vacía. El grano seco llega solo cuando un lote termina de secarse.
+            </span>
+          )}
+        </div>
 
         <button
-          className="boton primario"
-          disabled={K.GRADOS.every((g) => (s.bodega[g.id] ?? 0) <= 0)}
+          className="boton grande primario"
+          disabled={enBodega <= 0}
           onClick={() => dispatch({ tipo: 'VENDER_TODO' })}
         >
-          Vender toda la bodega
+          <span>Vender toda la bodega</span>
+          <em>{enBodega > 0 ? pesos(valorBodega) : 'sin existencias'}</em>
         </button>
 
-        <div className="espaciador" style={{ flex: 1 }} />
-
-        <div className="bodega-item" title="Siempre disponible y siempre peor: el intermediario paga el 20%">
-          <IconoGrano />
-          <span style={{ color: 'var(--texto-tenue)' }}>Vender en baba</span>
+        {/* La salida rápida existe siempre y siempre paga peor. El juego no
+            prohíbe la mala decisión: la deja verse en el marcador. */}
+        <div className="salida-rapida">
+          <div className="salida-texto">
+            <strong>Vender en baba</strong>
+            <span>
+              El intermediario paga el {Math.round(K.FACTOR_VENTA_BABA * 100)}%. Beneficiado, ese mismo grano
+              vale hasta {(2.5 / K.FACTOR_VENTA_BABA).toFixed(0)} veces más.
+            </span>
+          </div>
           <button
-            className="boton peligro"
+            className="boton grande peligro"
             disabled={s.granoBaba <= 0}
             onClick={() => dispatch({ tipo: 'VENDER_BABA' })}
+            title="Siempre disponible y siempre peor"
           >
-            {pesos(s.granoBaba * precioBaba(s, a))} por {num(s.granoBaba, 0)} granos
+            <span>{pesos(s.granoBaba * precioBaba(s, a))}</span>
+            <em>por {num(s.granoBaba, 0)} granos</em>
           </button>
         </div>
       </div>
