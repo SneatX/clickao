@@ -141,6 +141,7 @@ export function ModalAjustes({ onCerrar }: { onCerrar: () => void }) {
   const { guardarYa } = useCarga()
   const [texto, setTexto] = useState('')
   const [mensaje, setMensaje] = useState('')
+  const [confirmando, setConfirmando] = useState(false)
 
   return (
     <Modal titulo="Ajustes y partida" onCerrar={onCerrar} ancho="angosto">
@@ -191,18 +192,28 @@ export function ModalAjustes({ onCerrar }: { onCerrar: () => void }) {
         >
           Importar
         </button>
+        {/* Confirmación en dos pasos dentro de la interfaz. Un confirm() del
+            navegador bloquea la pestaña entera mientras está abierto. */}
         <button
           className="boton peligro"
           onClick={() => {
-            if (confirm('Esto borra la partida y empieza de cero. ¿Seguro?')) {
-              borrar()
-              dispatch({ tipo: 'REINICIAR' })
-              setMensaje('Partida borrada.')
+            if (!confirmando) {
+              setConfirmando(true)
+              return
             }
+            borrar()
+            dispatch({ tipo: 'REINICIAR' })
+            setConfirmando(false)
+            setMensaje('Partida borrada. La finca vuelve a empezar.')
           }}
         >
-          Empezar de cero
+          {confirmando ? 'Confirmar: esto borra todo' : 'Empezar de cero'}
         </button>
+        {confirmando && (
+          <button className="boton" onClick={() => setConfirmando(false)}>
+            Cancelar
+          </button>
+        )}
       </div>
 
       {mensaje && <p style={{ color: 'var(--dorado)', marginBottom: 0 }}>{mensaje}</p>}
