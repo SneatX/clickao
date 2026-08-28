@@ -82,7 +82,7 @@ export const GRADOS: Grado[] = [
 /** Precio mayorista de referencia por kilo de grano seco corriente. */
 export const PRECIO_BASE_KILO = 10000
 /** Venta de grano en baba al intermediario. Siempre disponible, siempre peor. */
-export const FACTOR_VENTA_BABA = 0.2
+export const FACTOR_VENTA_BABA = 0.15
 
 /** Enfermedades. Nunca llevan la produccion a cero. */
 export const PENALIZACION_MONILIA = 0.85

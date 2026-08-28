@@ -27,7 +27,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'jornalero',
     nombre: 'Jornalero de cosecha',
     descripcion: 'Una persona mas recorriendo el lote y cortando lo que esta en punto.',
-    costo: 500,
+    costo: 700,
     produccion: 0.4,
     ficha: 'mano-de-obra',
   },
@@ -35,7 +35,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'sombrio_transitorio',
     nombre: 'Sombrio transitorio de platano',
     descripcion: 'Platano y yuca protegen el cacao joven del sol mientras crece.',
-    costo: 3_500,
+    costo: 4_900,
     produccion: 4,
     ficha: 'sombrio-transitorio',
   },
@@ -43,7 +43,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'sombrio_permanente',
     nombre: 'Sombrio permanente con maderables',
     descripcion: 'Arboles altos que dan sombra estable y madera a largo plazo.',
-    costo: 40_000,
+    costo: 56_000,
     produccion: 32,
     ficha: 'sombrio-permanente',
   },
@@ -51,7 +51,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'clones_injertados',
     nombre: 'Clones injertados TCS',
     descripcion: 'Material clonal santandereano, seleccionado por rendimiento y por sabor.',
-    costo: 420_000,
+    costo: 1_180_000,
     produccion: 190,
     ficha: 'clones-injertados',
   },
@@ -59,7 +59,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'fertilizacion',
     nombre: 'Fertilizacion segun analisis de suelo',
     descripcion: 'Reponer lo que el cultivo extrae, en la cantidad que el suelo pide.',
-    costo: 4_500_000,
+    costo: 12_600_000,
     produccion: 1_040,
     ficha: 'fertilizacion',
   },
@@ -67,7 +67,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'podas_mantenimiento',
     nombre: 'Podas de formacion y mantenimiento',
     descripcion: 'Dar forma al arbol y abrir el dosel para que entre luz y aire.',
-    costo: 50_000_000,
+    costo: 140_000_000,
     produccion: 5_600,
     ficha: 'podas',
   },
@@ -75,7 +75,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'riego_drenaje',
     nombre: 'Riego y drenaje del lote',
     descripcion: 'Agua cuando falta y salida cuando sobra. El cacao no perdona el encharcamiento.',
-    costo: 700_000_000,
+    costo: 1_960_000_000,
     produccion: 31_000,
     ficha: 'riego-drenaje',
   },
@@ -83,7 +83,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'vivero_clonal',
     nombre: 'Vivero y jardin clonal propio',
     descripcion: 'Producir en la finca las varetas y los patrones en vez de comprarlos.',
-    costo: 11_500_000_000,
+    costo: 32_200_000_000,
     produccion: 176_000,
     ficha: 'vivero-clonal',
   },
@@ -91,7 +91,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'nuevas_hectareas',
     nombre: 'Ampliacion a nuevas hectareas',
     descripcion: 'Mas area sembrada bajo el mismo sistema agroforestal.',
-    costo: 180_000_000_000,
+    costo: 504_000_000_000,
     produccion: 1_040_000,
     ficha: 'agroforestal',
   },
@@ -99,7 +99,7 @@ const GENERADORES: DefGenerador[] = [
     id: 'asociacion',
     nombre: 'Asociacion y asistencia tecnica',
     descripcion: 'Organizarse con los vecinos abre credito, insumos y acompanamiento.',
-    costo: 2_600_000_000_000,
+    costo: 7_280_000_000_000,
     produccion: 6_400_000,
     ficha: 'asociatividad',
   },
@@ -146,10 +146,11 @@ function generadores(): Mejora[] {
 
 /** Cada generador tiene tres refuerzos que duplican su rendimiento. */
 function refuerzosDeGenerador(): Mejora[] {
+  // Dos refuerzos por generador y no tres, y caros. Es una segunda escala
+  // multiplicativa sobre la misma linea: si sale barata, la curva se desborda.
   const sufijos = [
-    { nombre: 'mejorado', umbral: 10, factorCosto: 12 },
-    { nombre: 'tecnificado', umbral: 25, factorCosto: 140 },
-    { nombre: 'certificado', umbral: 50, factorCosto: 1_600 },
+    { nombre: 'mejorado', umbral: 20, factorCosto: 90 },
+    { nombre: 'certificado', umbral: 50, factorCosto: 9_000 },
   ]
   const out: Mejora[] = []
   for (const g of GENERADORES) {
@@ -326,7 +327,7 @@ function herramientas(): Mejora[] {
   )
 
   // Escalones procedimentales: la linea de herramientas nunca se agota.
-  let costo = 5_000_000 * 7
+  let costo = 5_000_000 * 10
   for (let n = 1; n <= 35; n++) {
     out.push({
       id: `cuadrilla_ampliada_${n}`,
@@ -340,7 +341,7 @@ function herramientas(): Mejora[] {
       fichaId: 'punto-de-corte',
       requiere: [{ tipo: 'mejora', id: n === 1 ? 'cuadrilla' : `cuadrilla_ampliada_${n - 1}`, nivel: 1 }],
     })
-    costo *= 7
+    costo *= 10
   }
   return out
 }
@@ -352,7 +353,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Cajon fermentador de cedro',
       descripcion: 'Abre la etapa de beneficio. Un cajon con capacidad para un kilo de grano.',
-      costoBase: 8_000,
+      costoBase: 3_500,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'lotes_paralelos', valor: 1 }],
@@ -363,7 +364,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Marquesina de secado',
       descripcion: 'Secar bajo techo translucido en vez de sobre el piso. Sube la calidad base.',
-      costoBase: 90_000,
+      costoBase: 25_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'calidad_base', valor: 0.08 }],
@@ -375,7 +376,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Pala de madera para volteo',
       descripcion: 'Remover la masa sin herir el grano. Cada volteo aporta mas calidad.',
-      costoBase: 45_000,
+      costoBase: 12_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'calidad_volteo', valor: 0.04 }],
@@ -387,9 +388,9 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Cajones en escalera',
       descripcion: 'Trasegar la masa de un cajon a otro por gravedad. Un lote mas en paralelo.',
-      costoBase: 60_000,
-      crecimiento: 7,
-      maxNivel: 3,
+      costoBase: 9_000,
+      crecimiento: 3,
+      maxNivel: 5,
       efectos: [{ tipo: 'lotes_paralelos', valor: 1 }],
       fichaId: 'fermentacion',
       requiere: [{ tipo: 'mejora', id: 'cajon_sencillo', nivel: 1 }],
@@ -399,7 +400,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Termometro de masa',
       descripcion: 'Seguir la curva de temperatura, que llega cerca de los 50 grados. Sube el techo de calidad.',
-      costoBase: 120_000,
+      costoBase: 35_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'calidad_techo', valor: 0.03 }],
@@ -411,7 +412,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Cajon modular en madera de moncoro',
       descripcion: 'Estructura desarmable con mejor control de calor. Capacidad por dos y medio.',
-      costoBase: 250_000,
+      costoBase: 28_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'lotes_capacidad', valor: 2.5 }],
@@ -423,7 +424,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Prueba de corte sistematica',
       descripcion: 'Cortar diez granos de cada lote y contar los pardos. Muestra la calidad exacta.',
-      costoBase: 300_000,
+      costoBase: 90_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'calidad_techo', valor: 0.02 }],
@@ -435,7 +436,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Zaranda de clasificacion',
       descripcion: 'Separar por tamano y sacar impurezas. Diez por ciento mas de precio.',
-      costoBase: 600_000,
+      costoBase: 150_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'precio_multiplicador', valor: 1.1 }],
@@ -447,7 +448,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Secador solar tipo tunel',
       descripcion: 'Aire caliente en circulacion. El secado baja de seis a cuatro dias.',
-      costoBase: 900_000,
+      costoBase: 260_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'secado_duracion', valor: 4 / 6 }],
@@ -459,7 +460,7 @@ function beneficio(): Mejora[] {
       categoria: 'beneficio',
       nombre: 'Cuarto de reposo con sacos de fique',
       descripcion: 'Almacenar en fresco, sobre estibas y sin olores cerca. Doce por ciento mas de precio.',
-      costoBase: 1_500_000,
+      costoBase: 400_000,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'precio_multiplicador', valor: 1.12 }],
@@ -468,69 +469,71 @@ function beneficio(): Mejora[] {
     },
   ]
 
-  // Capacidad, paralelismo y mercado, en escalones procedimentales.
-  let costoCap = 2_000_000
-  for (let n = 1; n <= 30; n++) {
-    out.push({
-      id: `ampliacion_beneficiadero_${n}`,
+  // Capacidad, paralelismo y mercado. Son escalas repetibles y no listas de
+  // niveles sueltos: así el costo por unidad de capacidad se afina con dos
+  // números y se puede mantener a la par de la curva de los generadores. La
+  // fermentación no se puede acortar, de modo que crecer aquí es la única forma
+  // de procesar más, y tiene que salir a un precio comparable al de producir.
+  out.push(
+    {
+      id: 'ampliacion_beneficiadero',
       categoria: 'beneficio',
-      nombre: `Ampliacion del beneficiadero ${romano(n)}`,
-      descripcion: 'Cajones mas grandes y mejor distribuidos. Capacidad por uno y medio.',
-      costoBase: costoCap,
-      crecimiento: 1,
-      maxNivel: 1,
-      efectos: [{ tipo: 'lotes_capacidad', valor: 1.5 }],
+      nombre: 'Ampliación del beneficiadero',
+      descripcion: 'Cajones más grandes y mejor distribuidos. Duplica la capacidad de cada lote.',
+      costoBase: 45_000,
+      crecimiento: 3.4,
+      maxNivel: Infinity,
+      efectos: [{ tipo: 'lotes_capacidad', valor: 2 }],
       fichaId: 'cajon-modular',
-      requiere: [
-        { tipo: 'mejora', id: n === 1 ? 'cajon_moncoro' : `ampliacion_beneficiadero_${n - 1}`, nivel: 1 },
-      ],
-    })
-    costoCap *= 8
-  }
-
-  let costoBat = 3_000_000
-  for (let n = 1; n <= 20; n++) {
-    out.push({
-      id: `bateria_cajones_${n}`,
+      requiere: [{ tipo: 'mejora', id: 'cajon_moncoro', nivel: 1 }],
+    },
+    {
+      id: 'bateria_cajones',
       categoria: 'beneficio',
-      nombre: `Bateria de cajones ${romano(n)}`,
-      descripcion: 'Otro cajon corriendo en paralelo, porque la fermentacion no se puede apurar.',
-      costoBase: costoBat,
-      crecimiento: 1,
-      maxNivel: 1,
+      nombre: 'Otro cajón en la batería',
+      descripcion: 'Un lote más corriendo en paralelo, porque la fermentación no se puede apurar.',
+      costoBase: 150_000,
+      crecimiento: 1.18,
+      maxNivel: Infinity,
       efectos: [{ tipo: 'lotes_paralelos', valor: 1 }],
       fichaId: 'fermentacion',
-      requiere: [
-        { tipo: 'mejora', id: n === 1 ? 'cajon_escalera' : `bateria_cajones_${n - 1}`, nivel: n === 1 ? 3 : 1 },
-      ],
-    })
-    costoBat *= 9
-  }
+      requiere: [{ tipo: 'mejora', id: 'cajon_escalera', nivel: 5 }],
+    },
+  )
 
   const MERCADO = [
-    'Trazabilidad por lote',
-    'Certificacion organica',
-    'Venta directa a chocolateria',
-    'Perfil sensorial documentado',
-    'Denominacion de origen',
+    { id: 'mercado_trazabilidad', nombre: 'Trazabilidad por lote', costo: 1_200_000 },
+    { id: 'mercado_organica', nombre: 'Certificación orgánica', costo: 9_000_000 },
+    { id: 'mercado_directa', nombre: 'Venta directa a chocolatería', costo: 70_000_000 },
+    { id: 'mercado_sensorial', nombre: 'Perfil sensorial documentado', costo: 550_000_000 },
+    { id: 'mercado_origen', nombre: 'Denominación de origen', costo: 4_200_000_000 },
   ]
-  let costoMkt = 5_000_000
-  for (let n = 1; n <= 30; n++) {
-    const nombre = n <= MERCADO.length ? MERCADO[n - 1] : `Acuerdo comercial ${romano(n - MERCADO.length)}`
+  MERCADO.forEach((m, i) => {
     out.push({
-      id: `mercado_${n}`,
+      id: m.id,
       categoria: 'beneficio',
-      nombre,
-      descripcion: 'Mejor acceso a mercado. Quince por ciento mas de precio.',
-      costoBase: costoMkt,
+      nombre: m.nombre,
+      descripcion: 'Mejor acceso a mercado. Quince por ciento más de precio.',
+      costoBase: m.costo,
       crecimiento: 1,
       maxNivel: 1,
       efectos: [{ tipo: 'precio_multiplicador', valor: 1.15 }],
       fichaId: 'fino-de-aroma',
-      requiere: [{ tipo: 'mejora', id: n === 1 ? 'zaranda' : `mercado_${n - 1}`, nivel: 1 }],
+      requiere: [{ tipo: 'mejora', id: i === 0 ? 'zaranda' : MERCADO[i - 1].id, nivel: 1 }],
     })
-    costoMkt *= 9
-  }
+  })
+  out.push({
+    id: 'acuerdo_comercial',
+    categoria: 'beneficio',
+    nombre: 'Acuerdo comercial',
+    descripcion: 'Otro comprador que paga la calidad. Quince por ciento más de precio.',
+    costoBase: 30_000_000_000,
+    crecimiento: 3.2,
+    maxNivel: Infinity,
+    efectos: [{ tipo: 'precio_multiplicador', valor: 1.15 }],
+    fichaId: 'asociatividad',
+    requiere: [{ tipo: 'mejora', id: 'mercado_origen', nivel: 1 }],
+  })
 
   return out
 }
