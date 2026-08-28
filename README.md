@@ -176,9 +176,24 @@ desaturados; la saturación máxima está reservada al rango cálido de la madur
 de la mazorca, que es el objetivo de clic; **todo lo frío significa problema**,
 el gris azulado es enfermedad y nunca decoración.
 
+Cada línea de mejora tiene además su propio acento, para distinguirlas de un
+vistazo sin leer: oro para Herramientas, verde vivo para Cultivo y terracota
+para Beneficio. Cada mejora tiene su icono en `IconosMejora.tsx`; las escalas
+procedimentales caen al icono de su categoría.
+
 Las mazorcas cuelgan del tronco y de las ramas gruesas porque el cacao es
 caulifloro, y viven dentro del mismo `viewBox` que el fondo para no despegarse
-al cambiar el tamaño de la ventana.
+al cambiar el tamaño de la ventana. Al cosechar, la mazorca se parte en dos
+mitades que giran y dejan ver el grano en baba; esa animación es un objeto
+visual con vida propia (`Corte.tsx`) y no una clase sobre la mazorca, porque el
+reducer reemplaza el fruto cortado por otro recién cuajado con id nuevo.
+
+Comprar no cambia solo un número. El sombrío transitorio siembra plátanos, el
+permanente levanta maderables, los clones oscurecen y densifican el dosel, el
+vivero y la compostera aparecen en el lote, los jornaleros se ven trabajando al
+pie del árbol, y el cajón fermentador levanta un beneficiadero donde las cajas
+humean mientras hay masa fermentando y el grano se ve tendido bajo la
+marquesina durante el secado.
 
 Partículas y números flotantes van en **un solo canvas fuera de React**, con
 objetos reutilizados, tope de partículas vivas y agregación de clics seguidos en
