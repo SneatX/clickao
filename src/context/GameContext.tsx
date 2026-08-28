@@ -47,7 +47,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [avisoCarga, setAvisoCarga] = useState<AvisoCarga | null>(null)
   const cargado = useRef(false)
   const estadoRef = useRef(estado)
-  estadoRef.current = estado
+
+  // El espejo del estado se actualiza despues del render y no durante: los
+  // manejadores de guardado leen de aqui fuera del ciclo de renderizado.
+  useEffect(() => {
+    estadoRef.current = estado
+  })
 
   // Carga inicial. Va en un efecto con guarda y no en el inicializador del
   // reducer, porque en modo estricto el inicializador puede correr dos veces y

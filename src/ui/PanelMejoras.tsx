@@ -86,36 +86,31 @@ export function PanelMejoras({ onFicha, linea, onLinea }: Props) {
         )}
 
         {porLinea[linea].map(({ mejora, nivel, costo, alcanzable }) => (
-          <button
-            key={mejora.id}
-            className="mejora"
-            disabled={!alcanzable}
-            onClick={() => dispatch({ tipo: 'COMPRAR', mejoraId: mejora.id })}
-            title={alcanzable ? `Comprar por ${pesos(costo)}` : `Te faltan ${pesos(costo - s.dinero)}`}
-          >
-            <span className="nombre">{mejora.nombre}</span>
-            <span className="costo">{pesos(costo)}</span>
-            <span className="desc">{mejora.descripcion}</span>
-            <span className="meta">
-              <span>
-                {nivel > 0 && <span className="nivel">{mejora.maxNivel === Infinity ? `x${num(nivel, 0)}` : `nivel ${nivel}`}</span>}
-                {mejora.maxNivel !== 1 && mejora.maxNivel !== Infinity && nivel > 0 ? ` de ${mejora.maxNivel}` : ''}
-              </span>
-              {mejora.fichaId && (
-                <span
-                  className="enlace-ficha"
-                  role="link"
-                  tabIndex={-1}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onFicha(mejora.fichaId!)
-                  }}
-                >
-                  Ver ficha
+          <div key={mejora.id} className="mejora">
+            <button
+              className="mejora-comprar"
+              disabled={!alcanzable}
+              onClick={() => dispatch({ tipo: 'COMPRAR', mejoraId: mejora.id })}
+              title={alcanzable ? `Comprar por ${pesos(costo)}` : `Te faltan ${pesos(costo - s.dinero)}`}
+            >
+              <span className="nombre">{mejora.nombre}</span>
+              <span className="costo">{pesos(costo)}</span>
+              <span className="desc">{mejora.descripcion}</span>
+            </button>
+            <div className="mejora-pie">
+              {nivel > 0 && (
+                <span className="nivel">
+                  {mejora.maxNivel === Infinity ? `x${num(nivel, 0)}` : `nivel ${nivel}`}
+                  {mejora.maxNivel !== 1 && mejora.maxNivel !== Infinity ? ` de ${mejora.maxNivel}` : ''}
                 </span>
               )}
-            </span>
-          </button>
+              {mejora.fichaId && (
+                <button className="enlace-ficha" onClick={() => onFicha(mejora.fichaId!)}>
+                  Ver ficha
+                </button>
+              )}
+            </div>
+          </div>
         ))}
       </div>
     </aside>

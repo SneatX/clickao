@@ -1,5 +1,5 @@
 /** Ventanas modales: finca, ajustes y el resumen de lo que pasó mientras no estabas. */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCarga, useDispatch, useEstado } from '../context/GameContext'
 import { semillasDisponibles, semillasLibres } from '../game/selectors'
 import { MEJORAS_PRESTIGIO } from '../data/mejoras'
@@ -20,6 +20,17 @@ function Modal({
   ancho?: 'angosto'
   children: React.ReactNode
 }) {
+  useEffect(() => {
+    const onTecla = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        onCerrar()
+      }
+    }
+    document.addEventListener('keydown', onTecla)
+    return () => document.removeEventListener('keydown', onTecla)
+  }, [onCerrar])
+
   return (
     <div className="velo" onMouseDown={(e) => e.target === e.currentTarget && onCerrar()}>
       <div className={`modal ${ancho ?? ''}`} role="dialog" aria-modal="true" aria-label={titulo}>

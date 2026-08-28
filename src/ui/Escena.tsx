@@ -9,7 +9,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { FaseMadurez, Mazorca as TMazorca } from '../game/types'
 import { useAgregados, useDispatch, useEstado } from '../context/GameContext'
-import { faseDe, rendimientoClic } from '../game/selectors'
+import { faseDe, factorEnfermedad, rendimientoClic } from '../game/selectors'
 import * as K from '../game/constants'
 import { Mazorca } from './Mazorca'
 import { Particulas, emitirCosecha } from './Particulas'
@@ -138,7 +138,7 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
         {s.focos.length > 0 && (
           <span className="chip alerta">
             {s.focos.length} {s.focos.length === 1 ? 'foco activo' : 'focos activos'} · producción al{' '}
-            {Math.round(factorVisible(s.focos.length, s) * 100)}%
+            {Math.round(factorEnfermedad(s) * 100)}%
           </span>
         )}
       </div>
@@ -153,12 +153,6 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
       </div>
     </section>
   )
-}
-
-function factorVisible(_n: number, s: ReturnType<typeof useEstado>): number {
-  let f = 1
-  for (const foco of s.focos) f *= foco.tipo === 'monilia' ? K.PENALIZACION_MONILIA : K.PENALIZACION_ESCOBA
-  return Math.max(K.PISO_PRODUCCION_ENFERMA, f)
 }
 
 /** Ilustración de fondo. Capas nombradas que se encienden con la progresión. */
@@ -220,9 +214,14 @@ function FondoFinca({ capas, arbolesExtra }: { capas: boolean[]; arbolesExtra: n
       )}
 
       {Array.from({ length: arbolesExtra }).map((_, i) => (
-        <g key={i} transform={`translate(${120 + i * 140} ${455 + (i % 3) * 12}) scale(0.55)`} opacity="0.6">
-          <path d="M0 60 L0 -10" stroke="#6b4f2a" strokeWidth="12" strokeLinecap="round" />
-          <ellipse cx="0" cy="-30" rx="66" ry="42" fill="#3b6b44" />
+        <g
+          key={i}
+          transform={`translate(${i < 3 ? 90 + i * 105 : 700 + (i - 3) * 105} ${452 + (i % 3) * 10}) scale(0.34)`}
+          opacity="0.45"
+        >
+          <path d="M0 60 L0 -10" stroke="#6b4f2a" strokeWidth="14" strokeLinecap="round" />
+          <ellipse cx="0" cy="-34" rx="70" ry="44" fill="#3b6b44" />
+          <ellipse cx="-24" cy="-52" rx="44" ry="28" fill="#4a7c4e" />
         </g>
       ))}
 

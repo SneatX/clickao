@@ -131,6 +131,17 @@ export const ANCLAS_MAZORCA: { x: number; y: number }[] = [
   { x: 486, y: 276 }, { x: 516, y: 272 }, { x: 376, y: 286 }, { x: 624, y: 290 },
 ]
 
+/**
+ * Sitios donde puede brotar un foco de enfermedad. Sobre el arbol principal y
+ * sobre los arboles del lote, nunca en el aire: la monilia ataca el fruto y la
+ * escoba de bruja los brotes y cojines florales.
+ */
+export const ANCLAS_FOCO: { x: number; y: number }[] = [
+  { x: 430, y: 430 }, { x: 560, y: 410 }, { x: 440, y: 360 }, { x: 556, y: 300 },
+  { x: 396, y: 330 }, { x: 604, y: 344 }, { x: 500, y: 250 }, { x: 470, y: 320 },
+  { x: 225, y: 442 }, { x: 390, y: 452 }, { x: 720, y: 448 }, { x: 885, y: 440 },
+]
+
 /** Caja de la escena. Fondo y capa de clic comparten viewBox para alinearse. */
 export const ESCENA_ANCHO = 1000
 export const ESCENA_ALTO = 620

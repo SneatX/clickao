@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Categoria } from './game/types'
-import { useDispatch, useEstado } from './context/GameContext'
+import { useCarga, useDispatch, useEstado } from './context/GameContext'
 import { ventanaAbierta } from './game/reducer'
 import { BarraSuperior } from './ui/BarraSuperior'
 import { Escena } from './ui/Escena'
@@ -16,6 +16,7 @@ const CLAVE_BAJO_CONSUMO = 'clickao.bajoConsumo'
 export default function App() {
   const s = useEstado()
   const dispatch = useDispatch()
+  const { resumen, avisoCarga, cerrarResumen } = useCarga()
   const [cuaderno, setCuaderno] = useState<string | null | false>(false)
   const [finca, setFinca] = useState(false)
   const [ajustes, setAjustes] = useState(false)
@@ -37,7 +38,8 @@ export default function App() {
     }
   }, [bajoConsumo])
 
-  const hayModal = cuaderno !== false || finca || ajustes
+  const bienvenida = resumen !== null || avisoCarga !== null
+  const hayModal = cuaderno !== false || finca || ajustes || bienvenida
 
   const atajos = useMemo(
     () => ({
@@ -58,9 +60,10 @@ export default function App() {
         setCuaderno(false)
         setFinca(false)
         setAjustes(false)
+        cerrarResumen()
       },
     }),
-    [s.lotes, s.focos, dispatch],
+    [s.lotes, s.focos, dispatch, cerrarResumen],
   )
   useAtajos(atajos)
 
@@ -85,9 +88,9 @@ export default function App() {
       </p>
 
       {!hayModal && <Avisos />}
-      {cuaderno !== false && <Cuaderno abierta={cuaderno} onCerrar={() => setCuaderno(false)} />}
-      {finca && <ModalFinca onCerrar={() => setFinca(false)} />}
-      {ajustes && <ModalAjustes onCerrar={() => setAjustes(false)} />}
+      {!bienvenida && cuaderno !== false && <Cuaderno abierta={cuaderno} onCerrar={() => setCuaderno(false)} />}
+      {!bienvenida && finca && <ModalFinca onCerrar={() => setFinca(false)} />}
+      {!bienvenida && ajustes && <ModalAjustes onCerrar={() => setAjustes(false)} />}
       <ModalAusencia />
     </>
   )

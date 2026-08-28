@@ -127,11 +127,9 @@ function MazorcaBase({
       </g>
 
       {marcada && fase === 'optimo' && (
-        <g transform="translate(0 -40)">
-          <rect x="-16" y="-8" width="32" height="15" rx="7.5" fill="#f2c14e" stroke="#c99b2b" />
-          <text className="marca-punto" y="3" textAnchor="middle">
-            punto
-          </text>
+        <g transform="translate(18 -22)">
+          <circle r="8" fill="#f2c14e" stroke="#c99b2b" strokeWidth="1.5" />
+          <path d="M-3.4 0 L-1 2.6 L3.6 -2.6" stroke="#2a2418" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
     </g>

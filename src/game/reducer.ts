@@ -241,7 +241,9 @@ function tick(s0: GameState, dt: number, semilla: number): GameState {
     if (s.proximoBrote <= 0) {
       if (s.focos.length < K.FOCOS_MAX && r() < a.riesgo) {
         const tipo = r() < 0.6 ? 'monilia' : 'escoba'
-        s.focos.push({ id: s.siguienteId++, tipo, x: entre(r, 190, 810), y: entre(r, 200, 500), t: 0 })
+        const libres = K.ANCLAS_FOCO.filter((a) => !s.focos.some((f) => f.x === a.x && f.y === a.y))
+        const sitio = libres[Math.floor(r() * libres.length)] ?? K.ANCLAS_FOCO[0]
+        s.focos.push({ id: s.siguienteId++, tipo, x: sitio.x, y: sitio.y, t: 0 })
         desbloquear(s, tipo === 'monilia' ? 'monilia' : 'escoba-de-bruja')
         desbloquear(s, 'poda-sanitaria')
         avisar(s, tipo === 'monilia' ? 'Brote de monilia en el lote' : 'Escoba de bruja en el lote', 'alerta')
