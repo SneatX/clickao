@@ -227,8 +227,8 @@ function tick(s0: GameState, dt: number, semilla: number): GameState {
         activa: true,
         id: s.siguienteId++,
         t: 0,
-        x: entre(r, 12, 84),
-        y: entre(r, 18, 78),
+        x: entre(r, 180, 820),
+        y: entre(r, 170, 500),
         proxima: 0,
       }
     }
@@ -241,7 +241,7 @@ function tick(s0: GameState, dt: number, semilla: number): GameState {
     if (s.proximoBrote <= 0) {
       if (s.focos.length < K.FOCOS_MAX && r() < a.riesgo) {
         const tipo = r() < 0.6 ? 'monilia' : 'escoba'
-        s.focos.push({ id: s.siguienteId++, tipo, x: entre(r, 14, 82), y: entre(r, 22, 78), t: 0 })
+        s.focos.push({ id: s.siguienteId++, tipo, x: entre(r, 190, 810), y: entre(r, 200, 500), t: 0 })
         desbloquear(s, tipo === 'monilia' ? 'monilia' : 'escoba-de-bruja')
         desbloquear(s, 'poda-sanitaria')
         avisar(s, tipo === 'monilia' ? 'Brote de monilia en el lote' : 'Escoba de bruja en el lote', 'alerta')
@@ -320,6 +320,9 @@ export function reducer(s: GameState, accion: Accion): GameState {
   switch (accion.tipo) {
     case 'TICK':
       return tick(s, accion.dt, accion.rnd)
+
+    case 'AUSENCIA':
+      return aplicarAusencia(s, accion.segundos).estado
 
     case 'COSECHAR': {
       const m = s.mazorcas.find((x) => x.id === accion.mazorcaId)

@@ -184,6 +184,7 @@ export interface Aviso {
 
 export type Accion =
   | { tipo: 'TICK'; dt: number; rnd: number }
+  | { tipo: 'AUSENCIA'; segundos: number }
   | { tipo: 'COSECHAR'; mazorcaId: number; rnd: number }
   | { tipo: 'COMPRAR'; mejoraId: string }
   | { tipo: 'CARGAR_CAJON' }

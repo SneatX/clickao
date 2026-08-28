@@ -118,14 +118,19 @@ export const BONO_POR_SEMILLA = 0.02
 
 export const PERSIST_KEY = 'clickao.save.v1'
 export const PERSIST_BACKUP_KEY = 'clickao.save.v1.bak'
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
 /**
- * Anclas de las mazorcas sobre la escena, en porcentaje del contenedor.
- * Son puntos de la ilustracion del arbol, no datos de juego.
+ * Anclas de las mazorcas, en coordenadas del viewBox de la escena (1000 x 620).
+ * Van sobre el tronco y las ramas gruesas y no en el follaje, porque el cacao
+ * es caulifloro: la flor y el fruto nacen del tronco, no de las ramas nuevas.
  */
 export const ANCLAS_MAZORCA: { x: number; y: number }[] = [
-  { x: 30, y: 44 }, { x: 63, y: 40 }, { x: 46, y: 58 }, { x: 22, y: 62 },
-  { x: 72, y: 60 }, { x: 55, y: 30 }, { x: 38, y: 33 }, { x: 68, y: 74 },
-  { x: 27, y: 76 }, { x: 50, y: 72 }, { x: 78, y: 48 }, { x: 17, y: 50 },
+  { x: 470, y: 472 }, { x: 524, y: 440 }, { x: 466, y: 400 }, { x: 526, y: 372 },
+  { x: 452, y: 336 }, { x: 542, y: 336 }, { x: 414, y: 308 }, { x: 580, y: 310 },
+  { x: 486, y: 276 }, { x: 516, y: 272 }, { x: 376, y: 286 }, { x: 624, y: 290 },
 ]
+
+/** Caja de la escena. Fondo y capa de clic comparten viewBox para alinearse. */
+export const ESCENA_ANCHO = 1000
+export const ESCENA_ALTO = 620
