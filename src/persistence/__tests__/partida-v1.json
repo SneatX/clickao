@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "granoBaba": 1730,
+  "bodega": {
+    "pasilla": 0,
+    "corriente": 0,
+    "premium": 0,
+    "fino": 0
+  },
+  "dinero": 48250,
+  "mazorcas": [
+    {
+      "id": 1,
+      "t": 0,
+      "x": 30,
+      "y": 44,
+      "roja": true
+    },
+    {
+      "id": 2,
+      "t": 2,
+      "x": 63,
+      "y": 40,
+      "roja": false
+    },
+    {
+      "id": 3,
+      "t": 4,
+      "x": 46,
+      "y": 58,
+      "roja": false
+    },
+    {
+      "id": 4,
+      "t": 6,
+      "x": 22,
+      "y": 62,
+      "roja": true
+    },
+    {
+      "id": 5,
+      "t": 8,
+      "x": 72,
+      "y": 60,
+      "roja": false
+    },
+    {
+      "id": 6,
+      "t": 10,
+      "x": 55,
+      "y": 30,
+      "roja": false
+    }
+  ],
+  "lotes": [],
+  "focos": [],
+  "dorada": {
+    "activa": false,
+    "id": 0,
+    "t": 0,
+    "x": 50,
+    "y": 50,
+    "proxima": 60
+  },
+  "bonoProduccion": {
+    "mult": 1,
+    "t": 0
+  },
+  "bonoPrecio": {
+    "mult": 1,
+    "t": 0
+  },
+  "bonoLluvia": {
+    "mult": 1,
+    "t": 0
+  },
+  "mejoras": {
+    "machete": 1,
+    "jornalero": 6,
+    "cajon_sencillo": 1,
+    "pala_madera": 1
+  },
+  "fichasDesbloqueadas": [
+    "punto-de-corte",
+    "reloj-de-la-finca"
+  ],
+  "fichasLeidas": [],
+  "logros": [],
+  "semillas": 0,
+  "semillasGastadas": 0,
+  "mejorasPrestigio": {},
+  "stats": {
+    "clics": 412,
+    "granosCosechados": 0,
+    "granosPasivos": 0,
+    "kgProducidos": 0,
+    "kgVendidos": 3,
+    "kgHistoricos": 3,
+    "dineroGanado": 61000,
+    "lotesTerminados": 0,
+    "lotesFinos": 0,
+    "volteosAcertados": 0,
+    "volteosPerdidos": 0,
+    "podas": 0,
+    "doradas": 0,
+    "tiempoJugado": 0,
+    "renovaciones": 0
+  },
+  "proximoBrote": 180,
+  "siguienteId": 7,
+  "ultimoTs": 0,
+  "avisos": []
+}
