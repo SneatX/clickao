@@ -341,6 +341,105 @@ body.bajo-consumo .corte-destello {
   animation-duration: 0.12s;
 }
 
+/* Poda sanitaria: filo, caída del foco fuera del lote y anillo de recuperación. */
+.poda,
+.recogida {
+  pointer-events: none;
+}
+
+.poda g,
+.poda path,
+.poda circle,
+.recogida circle,
+.recogida g {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.poda-cuerpo {
+  animation: poda-caida 0.56s cubic-bezier(0.3, 0.55, 0.45, 1) forwards;
+}
+
+@keyframes poda-caida {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  16% {
+    transform: translate(0, -5px) rotate(-10deg);
+  }
+  100% {
+    transform: translate(18px, 52px) rotate(78deg);
+    opacity: 0;
+  }
+}
+
+.poda-filo {
+  animation: destello 0.24s ease-out forwards;
+}
+
+.poda-sano {
+  animation: sano 0.56s ease-out forwards;
+}
+
+@keyframes sano {
+  0% {
+    opacity: 0;
+    transform: scale(0.25);
+  }
+  25% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+.poda-polvo {
+  animation: polvo 0.5s ease-out forwards;
+}
+
+@keyframes polvo {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+/* Mazorca dorada recogida. */
+.recogida-anillo {
+  animation: sano 0.55s ease-out forwards;
+}
+
+.recogida-anillo.dos {
+  animation-delay: 0.12s;
+}
+
+.recogida-chispas {
+  animation: chispas 0.55s ease-out forwards;
+}
+
+@keyframes chispas {
+  0% {
+    opacity: 1;
+    transform: scale(0.2) rotate(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5) rotate(40deg);
+  }
+}
+
+body.bajo-consumo .poda-polvo,
+body.bajo-consumo .recogida-chispas {
+  display: none;
+}
+
 .marca-punto {
   font-size: 10px;
   font-weight: 700;

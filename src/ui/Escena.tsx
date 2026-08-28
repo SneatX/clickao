@@ -9,10 +9,11 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import type { FaseMadurez, Lote, Mazorca as TMazorca } from '../game/types'
 import { useAgregados, useDispatch, useEstado } from '../context/GameContext'
-import { faseDe, factorEnfermedad, rendimientoClic } from '../game/selectors'
+import { faseDe, factorEnfermedad, produccionPasiva, rendimientoClic } from '../game/selectors'
 import * as K from '../game/constants'
 import { Mazorca } from './Mazorca'
 import { Corte, type CorteVisual } from './Corte'
+import { Poda, Recogida, type PodaVisual, type RecogidaVisual } from './Poda'
 import { Particulas, emitirCosecha } from './Particulas'
 import { IconoDorada, IconoFoco } from './Iconos'
 import { num, segundos } from '../game/format'
@@ -22,7 +23,9 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
   const a = useAgregados()
   const dispatch = useDispatch()
   const [cortes, setCortes] = useState<CorteVisual[]>([])
-  const claveCorte = useRef(0)
+  const [podas, setPodas] = useState<PodaVisual[]>([])
+  const [recogidas, setRecogidas] = useState<RecogidaVisual[]>([])
+  const claveEfimera = useRef(0)
 
   const escala = a.cicloMazorca / K.CICLO_MAZORCA_SEG
   const ventanaInicio = ((K.SOBREMADURA_DESDE - a.ventanaOptima) * escala) / a.cicloMazorca
@@ -39,12 +42,55 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
         granos: fase === 'optimo' ? 16 : 8,
         color: fase === 'optimo' ? '#b25a0f' : '#2a2418',
       })
-      const clave = ++claveCorte.current
+      const clave = ++claveEfimera.current
       setCortes((c) => [...c, { clave, x: m.x, y: m.y, roja: m.roja, enPunto: fase === 'optimo' }])
       window.setTimeout(() => setCortes((c) => c.filter((x) => x.clave !== clave)), 440)
       dispatch({ tipo: 'COSECHAR', mazorcaId: m.id, rnd: (Math.random() * 2 ** 32) >>> 0 })
     },
     [a, dispatch],
+  )
+
+  /**
+   * Poda sanitaria. El bono en granos que devuelve retirar el foco a tiempo se
+   * ve como cifra flotante: antes se cobraba en silencio.
+   */
+  const podar = useCallback(
+    (foco: { id: number; tipo: 'monilia' | 'escoba'; x: number; y: number }, e: React.SyntheticEvent) => {
+      const caja = (e.currentTarget as SVGGElement).getBoundingClientRect()
+      emitirCosecha({
+        clientX: caja.left + caja.width / 2,
+        clientY: caja.top + caja.height / 2,
+        cantidad: Math.max(K.BONO_PODA, produccionPasiva(s) * 10),
+        granos: 10,
+        color: '#2f6b34',
+        particulas: ['#7fbd52', '#3f7d45', '#b9a888'],
+      })
+      const clave = ++claveEfimera.current
+      setPodas((p) => [...p, { clave, x: foco.x, y: foco.y, tipo: foco.tipo }])
+      window.setTimeout(() => setPodas((p) => p.filter((x) => x.clave !== clave)), 580)
+      dispatch({ tipo: 'PODAR', focoId: foco.id })
+    },
+    [s, dispatch],
+  )
+
+  const recogerDorada = useCallback(
+    (e: React.SyntheticEvent) => {
+      const caja = (e.currentTarget as SVGGElement).getBoundingClientRect()
+      emitirCosecha({
+        clientX: caja.left + caja.width / 2,
+        clientY: caja.top + caja.height / 2,
+        cantidad: 0,
+        granos: 16,
+        color: '#ffc94a',
+        sinNumero: true,
+        particulas: ['#ffc94a', '#fff0c2', '#cf9a25'],
+      })
+      const clave = ++claveEfimera.current
+      setRecogidas((r) => [...r, { clave, x: s.dorada.x, y: s.dorada.y }])
+      window.setTimeout(() => setRecogidas((r) => r.filter((x) => x.clave !== clave)), 580)
+      dispatch({ tipo: 'CLIC_DORADA', rnd: (Math.random() * 2 ** 32) >>> 0 })
+    },
+    [s.dorada.x, s.dorada.y, dispatch],
   )
 
   return (
@@ -77,6 +123,14 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
           <Corte key={c.clave} corte={c} />
         ))}
 
+        {podas.map((p) => (
+          <Poda key={p.clave} poda={p} />
+        ))}
+
+        {recogidas.map((r) => (
+          <Recogida key={r.clave} recogida={r} />
+        ))}
+
         {s.focos.map((f) => (
           <g
             key={f.id}
@@ -84,11 +138,11 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
             transform={`translate(${f.x} ${f.y})`}
             role="button"
             tabIndex={0}
-            onClick={() => dispatch({ tipo: 'PODAR', focoId: f.id })}
+            onClick={(e) => podar(f, e)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
-                dispatch({ tipo: 'PODAR', focoId: f.id })
+                podar(f, e)
               }
             }}
             aria-label={`Foco de ${f.tipo === 'monilia' ? 'monilia' : 'escoba de bruja'}. Hacer poda sanitaria.`}
@@ -104,11 +158,11 @@ export function Escena({ bajoConsumo }: { bajoConsumo: boolean }) {
             transform={`translate(${s.dorada.x} ${s.dorada.y})`}
             role="button"
             tabIndex={0}
-            onClick={() => dispatch({ tipo: 'CLIC_DORADA', rnd: (Math.random() * 2 ** 32) >>> 0 })}
+            onClick={recogerDorada}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
-                dispatch({ tipo: 'CLIC_DORADA', rnd: (Math.random() * 2 ** 32) >>> 0 })
+                recogerDorada(e)
               }
             }}
             aria-label="Mazorca dorada. Recogerla da una racha de suerte."

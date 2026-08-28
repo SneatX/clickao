@@ -18,6 +18,10 @@ export interface EventoParticula {
   cantidad: number
   color?: string
   granos?: number
+  /** Sin cifra flotante: hay efectos que no se miden en granos. */
+  sinNumero?: boolean
+  /** Colores de las partículas. Por defecto, tonos de grano. */
+  particulas?: string[]
 }
 
 type Escucha = (e: EventoParticula) => void
@@ -84,23 +88,26 @@ export function Particulas({ activo = true }: { activo?: boolean }) {
       const y = e.clientY - rect.top
 
       // Agrega el número si ya hay uno reciente cerca, en vez de apilar otro.
-      const cerca = numeros.find(
-        (n) => n.vivo && n.vida > VIDA_NUMERO * 0.45 && Math.hypot(n.x - x, n.y - y) < 70,
-      )
-      if (cerca) {
-        cerca.valor += e.cantidad
-        cerca.vida = VIDA_NUMERO
-      } else {
-        const libre = numeros.find((n) => !n.vivo) ?? numeros[0]
-        libre.vivo = true
-        libre.x = x
-        libre.y = y
-        libre.valor = e.cantidad
-        libre.vida = VIDA_NUMERO
-        libre.color = e.color ?? '#2a2418'
+      if (!e.sinNumero) {
+        const cerca = numeros.find(
+          (n) => n.vivo && n.vida > VIDA_NUMERO * 0.45 && Math.hypot(n.x - x, n.y - y) < 70,
+        )
+        if (cerca) {
+          cerca.valor += e.cantidad
+          cerca.vida = VIDA_NUMERO
+        } else {
+          const libre = numeros.find((n) => !n.vivo) ?? numeros[0]
+          libre.vivo = true
+          libre.x = x
+          libre.y = y
+          libre.valor = e.cantidad
+          libre.vida = VIDA_NUMERO
+          libre.color = e.color ?? '#2a2418'
+        }
       }
 
       const cuantos = Math.min(e.granos ?? 10, 18)
+      const paleta = e.particulas ?? ['#8b5e34', '#a9743f']
       let puestos = 0
       for (const g of granos) {
         if (puestos >= cuantos) break
@@ -113,10 +120,11 @@ export function Particulas({ activo = true }: { activo?: boolean }) {
         g.vx = Math.cos(ang) * vel
         g.vy = Math.sin(ang) * vel - 60
         g.vida = VIDA_GRANO
-        g.color = Math.random() < 0.5 ? '#8b5e34' : '#a9743f'
+        g.color = paleta[Math.floor(Math.random() * paleta.length)]
         puestos++
       }
     }
+
     escuchas.add(alCosechar)
 
     let frame = 0
