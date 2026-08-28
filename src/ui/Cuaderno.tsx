@@ -9,7 +9,7 @@ import { useDispatch, useEstado } from '../context/GameContext'
 export function Cuaderno({ abierta, onCerrar }: { abierta: string | null; onCerrar: () => void }) {
   const s = useEstado()
   const dispatch = useDispatch()
-  const [sel, setSel] = useState<string | null>(abierta)
+  const [elegida, setElegida] = useState<string | null>(abierta)
   const contenedor = useRef<HTMLDivElement>(null)
 
   const disponibles = useMemo(
@@ -17,22 +17,27 @@ export function Cuaderno({ abierta, onCerrar }: { abierta: string | null; onCerr
     [s.fichasDesbloqueadas],
   )
 
+  /**
+   * La ficha visible se deriva, no se sincroniza con un efecto. Antes se
+   * reponía desde un useEffect y, como el estado del juego cambia diez veces
+   * por segundo, el cuaderno se devolvía solo a la primera ficha en cuanto uno
+   * abría otra.
+   */
+  const sel =
+    elegida && s.fichasDesbloqueadas.includes(elegida) ? elegida : (disponibles[0]?.id ?? null)
+
+  // Al abrir el cuaderno desde una mejora concreta, se muestra esa ficha.
   useEffect(() => {
-    setSel(abierta && s.fichasDesbloqueadas.includes(abierta) ? abierta : (disponibles[0]?.id ?? null))
-  }, [abierta, disponibles, s.fichasDesbloqueadas])
+    if (abierta) setElegida(abierta)
+  }, [abierta])
 
   useEffect(() => {
     if (sel && !s.fichasLeidas.includes(sel)) dispatch({ tipo: 'LEER_FICHA', fichaId: sel })
   }, [sel, s.fichasLeidas, dispatch])
 
   useEffect(() => {
-    const onTecla = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCerrar()
-    }
-    document.addEventListener('keydown', onTecla)
     contenedor.current?.focus()
-    return () => document.removeEventListener('keydown', onTecla)
-  }, [onCerrar])
+  }, [])
 
   const ficha = sel ? FICHAS_POR_ID[sel] : null
 
@@ -62,7 +67,7 @@ export function Cuaderno({ abierta, onCerrar }: { abierta: string | null; onCerr
                       key={f.id}
                       className="indice-item"
                       aria-current={sel === f.id}
-                      onClick={() => setSel(f.id)}
+                      onClick={() => setElegida(f.id)}
                     >
                       <span className={`punto-nuevo ${s.fichasLeidas.includes(f.id) ? 'leido' : ''}`} />
                       {f.titulo}

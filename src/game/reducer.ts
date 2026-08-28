@@ -118,10 +118,7 @@ function borrador(s: GameState): GameState {
     mejoras: { ...s.mejoras },
     mejorasPrestigio: { ...s.mejorasPrestigio },
     stats: { ...s.stats },
-    fichasDesbloqueadas: [...s.fichasDesbloqueadas],
-    fichasLeidas: [...s.fichasLeidas],
-    logros: [...s.logros],
-    avisos: s.avisos.map((v) => ({ ...v })),
+    avisos: s.avisos,
   }
 }
 
@@ -133,7 +130,16 @@ function avisar(s: GameState, texto: string, tono: Aviso['tono'] = 'neutro') {
 function desbloquear(s: GameState, fichaId?: string) {
   if (!fichaId) return
   if (s.fichasDesbloqueadas.includes(fichaId)) return
-  s.fichasDesbloqueadas.push(fichaId)
+  // Copia solo al cambiar: si la lista conservara su identidad al mutarla, los
+  // consumidores no se enterarían; si se clonara siempre, se enterarían de más.
+  s.fichasDesbloqueadas = [...s.fichasDesbloqueadas, fichaId]
+}
+
+function anotarLogros(s: GameState) {
+  const nuevos = logrosPendientes(s)
+  if (!nuevos.length) return
+  s.logros = [...s.logros, ...nuevos]
+  for (const id of nuevos) avisar(s, `Logro: ${LOGROS_POR_ID[id].nombre}`, 'bueno')
 }
 
 /** Ventana de volteo abierta ahora mismo, o -1 si ninguna. */
@@ -304,11 +310,7 @@ function tick(s0: GameState, dt: number, semilla: number): GameState {
   }
 
   // 9. Logros.
-  const nuevos = logrosPendientes(s)
-  if (nuevos.length) {
-    s.logros.push(...nuevos)
-    for (const id of nuevos) avisar(s, `Logro: ${LOGROS_POR_ID[id].nombre}`, 'bueno')
-  }
+  anotarLogros(s)
 
   return s
 }
@@ -341,11 +343,7 @@ export function reducer(s: GameState, accion: Accion): GameState {
       n.mazorcas[idx] = { ...n.mazorcas[idx], id: n.siguienteId++, t: 0, roja: accion.rnd % 3 === 0 }
       if (fase === 'optimo') desbloquear(n, 'punto-de-corte')
       if (fase === 'verde' || fase === 'sobremadura') desbloquear(n, 'corte-mazorca')
-      const nuevos = logrosPendientes(n)
-      if (nuevos.length) {
-        n.logros.push(...nuevos)
-        for (const id of nuevos) avisar(n, `Logro: ${LOGROS_POR_ID[id].nombre}`, 'bueno')
-      }
+      anotarLogros(n)
       return n
     }
 
